@@ -1,0 +1,330 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text color for readability */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+}
+
+/* Header Styling */
+header {
+  background-color: #1f1f1f; /* Dark background for header */
+  padding: 1.5em 0; /* Reduced padding for better visual balance */
+  text-align: center;
+  color: #ffffff;
+  font-size: 2em; /* Reduced heading size */
+  font-weight: 700;
+  border-bottom: 5px solid #333333; /* Darker border */
+}
+
+/* Main Content Section */
+.main-section {
+  margin-top: 2em;
+  padding: 0 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3em;
+}
+
+/* Voice Command Container */
+.voice-command-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #333333; /* Dark background for the container */
+  border-radius: 10px;
+  padding: 2.5em;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4); /* Dark shadow for a more distinct look */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.voice-command-container h2 {
+  color: #00bcd4; /* Bright teal for heading */
+  font-size: 2.2em;
+  margin-bottom: 1.5em;
+}
+
+.voice-command-btn {
+  background-color: #00bcd4; /* Teal button */
+  color: white;
+  padding: 1.2em 2.8em;
+  font-size: 1.2em;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.voice-command-btn:hover {
+  background-color: #0288d1; /* Darker blue on hover */
+  transform: translateY(-4px);
+}
+
+/* Log List Container */
+.log-list-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 3em auto;
+  background-color: #333333; /* Dark background for logs container */
+  border-radius: 10px;
+  padding: 2em;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.log-list-container h2 {
+  color: #00bcd4; /* Teal color for heading */
+  font-size: 2.2em;
+  margin-bottom: 1.5em;
+}
+
+/* Log Items */
+.log-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 1em;
+}
+
+.log-item {
+  background-color: #444444; /* Dark grey for log items */
+  border-radius: 10px;
+  padding: 1.2em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.log-item:hover {
+  background-color: #555555; /* Slightly lighter grey on hover */
+  cursor: pointer;
+}
+
+.status {
+  font-size: 1em;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 80px;
+}
+
+.status.success {
+  background-color: #4caf50; /* Green for success */
+  color: white;
+}
+
+.status.error {
+  background-color: #f44336; /* Red for error */
+  color: white;
+}
+
+.status.pending {
+  background-color: #ff9800; /* Orange for pending */
+  color: white;
+}
+
+/* Footer Styling */
+footer {
+  background-color: #1f1f1f; /* Dark footer background */
+  padding: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.1em;
+  font-weight: 400;
+  border-top: 5px solid #333333;
+}
+
+/* Log List Styling */
+.log-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 2em auto;
+  padding: 1.5em;
+  background-color: #333333; /* Dark background for log container */
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.log-toggle-btn {
+  background-color: #00bcd4; /* Teal button for toggle */
+  color: white;
+  padding: 1em 2em;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.log-toggle-btn:hover {
+  background-color: #0288d1;
+}
+
+.loading-text,
+.error-text {
+  font-size: 1.1em;
+  color: #ff5722; /* Error color */
+  margin: 1em 0;
+}
+
+.log-list {
+  margin-top: 1.5em;
+}
+
+.log-item {
+  background-color: #444444; /* Dark grey for log item */
+  border-radius: 8px;
+  padding: 1.5em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2em;
+  transition: background-color 0.3s ease;
+}
+
+.log-item:hover {
+  background-color: #555555;
+}
+
+.log-object,
+.log-status,
+.log-time {
+  font-size: 1.1em;
+  margin-right: 1em;
+}
+
+.log-status {
+  font-weight: 600;
+}
+
+.log-status.success {
+  color: #4caf50;
+}
+
+.log-status.error {
+  color: #f44336;
+}
+
+.log-status.pending {
+  color: #ff9800;
+}
+
+.log-time {
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Voice Command Styling - Dark Theme */
+.voice-command-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 2em auto;
+  padding: 1.5em;
+  background-color: #333333; /* Dark background */
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.voice-command-header {
+  font-size: 1.8em;
+  color: #ffffff; /* Light text for header */
+  margin-bottom: 1em;
+  font-weight: bold;
+}
+
+.voice-command-text {
+  font-size: 1.2em;
+  color: #cccccc; /* Lighter grey for instructions */
+  margin-bottom: 1.5em;
+}
+
+.voice-command-btn {
+  background-color: #00bcd4; /* Teal button for dark theme */
+  color: white;
+  padding: 1em 2em;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.voice-command-btn:hover {
+  background-color: #0288d1;
+  transform: scale(1.05);
+}
+
+.voice-command-btn:active {
+  background-color: #004085;
+}
+
+.voice-command-result {
+  margin-top: 2em;
+  font-size: 1.1em;
+  color: #28a745; /* Green text for success */
+  font-weight: 500;
+}
+
+.voice-command-error {
+  margin-top: 2em;
+  font-size: 1.1em;
+  color: #dc3545; /* Red text for errors */
+  font-weight: 500;
+}
+
+.voice-command-loading {
+  margin-top: 2em;
+  font-size: 1.1em;
+  color: #ffc107; /* Yellow color for loading */
+  font-weight: 500;
+}
+
+/* Stop Button Styling */
+.stop-btn {
+  background-color: #f44336; /* Red for stop */
+  color: white;
+  padding: 1em 2em;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 2em;
+}
+
+.stop-btn:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+}
+
+.stop-btn:active {
+  background-color: #c62828;
+}
+
+/* Detection Message Styling */
+.detection-message {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #4caf50; /* Green color for successful detection */
+  margin-top: 2em;
+}
