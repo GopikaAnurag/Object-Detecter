@@ -1,54 +1,53 @@
 .log-container {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    color: var(--primary);
-  }
-  
-  .log-toggle-btn {
-    background-color: var(--accent);
-    color: var(--primary);
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: background 0.3s;
-  }
-  
-  .log-toggle-btn:hover {
-    background-color: var(--secondary);
-  }
-  
-  .log-list ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .log-item {
-    background-color: var(--bg);
-    border: 1px solid var(--muted);
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    color: var(--primary);
-  }
-  
-  .log-object {
-    font-weight: bold;
-    color: var(--accent);
-    display: block;
-  }
-  
-  .log-status {
-    color: var(--success);
-    display: block;
-  }
-  
-  .log-time {
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
-  
+  margin-top: 20px;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: var(--primary);
+}
+
+.log-toggle-btn {
+  background-color: var(--accent);
+  color: var(--primary);
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.3s;
+}
+
+.log-toggle-btn:hover {
+  background-color: var(--secondary);
+}
+
+.log-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.log-item {
+  background-color: var(--bg);
+  border: 1px solid var(--muted);
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--primary);
+}
+
+.log-object {
+  font-weight: bold;
+  color: var(--accent);
+  display: block;
+}
+
+.log-status {
+  color: var(--success);
+  display: block;
+}
+
+.log-time {
+  color: var(--muted);
+  font-size: 0.9rem;
+}

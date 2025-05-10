@@ -4,74 +4,123 @@ import '@tensorflow/tfjs';
 
 const CameraFeed = () => {
   const videoRef = useRef(null);
-  const [isBottleDetected, setIsBottleDetected] = useState(false);
-  const [timerExpired, setTimerExpired] = useState(false);
+  const [isObjectDetected, setIsObjectDetected] = useState(null);
+  const [cameraError, setCameraError] = useState('');
+  const [cameraPaused, setCameraPaused] = useState(false); // To track if detection is paused
   const timerRef = useRef(null);
+  const [timerExpired, setTimerExpired] = useState(false);
 
   const detectionTime = 20000; // 20 seconds
+  const [detectedObjects, setDetectedObjects] = useState({
+    bottle: false,
+    key: false,
+  });
 
   useEffect(() => {
+    let model;
+
     const startCamera = async () => {
       try {
-        // Access mobile camera or default video feed
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment' // Use the rear camera on mobile devices
-          }
-        });
-        videoRef.current.srcObject = stream;
-        console.log('🎥 Mobile camera started');
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        console.log('📸 Available Devices:', devices);
+
+        // Filter for video input devices (cameras)
+        const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+        console.log('🎥 Video Devices:', videoDevices);
+
+        if (videoDevices.length === 0) {
+          throw new Error('No video input devices found');
+        }
+
+        let stream = null;
+
+        try {
+          // Try environment camera (mobile)
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' }, width: 640, height: 480 },
+          });
+        } catch (err) {
+          console.warn('🌐 Environment camera failed, trying default:', err);
+          // Fallback: try default front camera
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        }
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+
+        videoRef.current.onloadedmetadata = async () => {
+          await videoRef.current.play();
+          console.log('✅ Camera started, loading model...');
+          model = await cocoSsd.load();
+          console.log('✅ Model loaded!');
+          detectObjects(model);
+        };
       } catch (error) {
         console.error('🚫 Camera error:', error);
-      }
-    };
-
-    const loadModel = async () => {
-      try {
-        const model = await cocoSsd.load();
-        console.log('✅ Model loaded!');
-        detectObjects(model);
-      } catch (error) {
-        console.error('🚫 Model loading error:', error);
+        setCameraError(error.message || 'Camera access failed');
       }
     };
 
     const detectObjects = (model) => {
       const detect = async () => {
-        if (timerExpired || isBottleDetected) {
-          // Stop detection if the bottle is already detected or the timer expired
-          return;
-        }
+        if (timerExpired || cameraPaused) return; // Skip detection if paused
 
         try {
-          const predictions = await model.detect(videoRef.current);
-          console.log('🎯 Predictions:', predictions);
+          if (
+            videoRef.current.readyState >= 2 &&
+            videoRef.current.videoWidth > 0 &&
+            videoRef.current.videoHeight > 0
+          ) {
+            const predictions = await model.detect(videoRef.current);
+            console.log('🎯 Predictions:', predictions);
 
-          // Look for "bottle" in predictions (case-insensitive)
-          const bottle = predictions.find((prediction) => prediction.class.toLowerCase() === 'bottle');
+            // Reset detected object states
+            const newDetectedObjects = { bottle: false, key: false };
 
-          if (bottle && !isBottleDetected) {
-            setIsBottleDetected(true);
-            console.log('🍼 Bottle detected!');
-            const audio = new Audio('/beep-07a.mp3');
-            audio.play().catch((err) => console.warn('🔇 Beep error:', err));
+            predictions.forEach((prediction) => {
+              if (prediction.class.toLowerCase() === 'bottle') {
+                newDetectedObjects.bottle = true;
+                console.log('✅ Bottle detected!');
+              }
+              if (prediction.class.toLowerCase() === 'key') {
+                newDetectedObjects.key = true;
+                console.log('✅ Key detected!');
+              }
+            });
+
+            // Update detectedObjects state only if there’s a change
+            if (
+              newDetectedObjects.bottle !== detectedObjects.bottle ||
+              newDetectedObjects.key !== detectedObjects.key
+            ) {
+              setDetectedObjects(newDetectedObjects);
+
+              if (newDetectedObjects.bottle && !isObjectDetected) {
+                setIsObjectDetected('bottle');
+                const audio = new Audio('/beep-07a.mp3');
+                audio.play().catch((err) => console.warn('🔇 Beep error:', err));
+              } else if (newDetectedObjects.key && !isObjectDetected) {
+                setIsObjectDetected('key');
+                const audio = new Audio('/beep-07a.mp3');
+                audio.play().catch((err) => console.warn('🔇 Beep error:', err));
+              }
+            }
           }
         } catch (error) {
           console.error('🚫 Detection error:', error);
         }
 
-        // Keep detecting objects
         requestAnimationFrame(detect);
       };
 
       detect();
     };
 
-    loadModel();
     startCamera();
 
     timerRef.current = setTimeout(() => {
-      console.log("⏰ Detection timeout.");
+      console.log('⏰ Detection timeout.');
       setTimerExpired(true);
     }, detectionTime);
 
@@ -81,13 +130,37 @@ const CameraFeed = () => {
         videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [isBottleDetected, timerExpired]);
+  }, [isObjectDetected, timerExpired, cameraPaused, detectedObjects]);
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'p' || event.key === 'P') {
+        // Toggle pause/resume detection on 'P' key press
+        setCameraPaused((prevState) => !prevState);
+      }
+
+      if (event.key === 's' || event.key === 'S') {
+        // Stop the camera on 'S' key press
+        if (videoRef.current?.srcObject) {
+          videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+          setCameraError('Camera stopped by user');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
 
   return (
     <div style={{ position: 'relative' }}>
-      <h4>📷 Camera Feed (Detecting: Bottle)</h4>
-      <video ref={videoRef} autoPlay width="100%" height="auto" />
-      {isBottleDetected && (
+      <h4>📷 Camera Feed</h4>
+      {cameraError && <p style={{ color: 'red' }}>🚫 Camera Error: {cameraError}</p>}
+      <video ref={videoRef} autoPlay playsInline width="100%" height="auto" />
+      {isObjectDetected && (
         <div
           style={{
             position: 'absolute',
@@ -103,10 +176,11 @@ const CameraFeed = () => {
             zIndex: 10,
           }}
         >
-          🍼 Bottle Detected
+          ✅ {isObjectDetected.charAt(0).toUpperCase() + isObjectDetected.slice(1)} Detected
         </div>
       )}
-      {timerExpired && <p>⏰ Detection stopped after timeout.</p>}
+      {timerExpired && !isObjectDetected && <p>⏰ Detection stopped after timeout.</p>}
+      {cameraPaused && <p style={{ color: 'orange' }}>⏸️ Detection Paused. Press 'P' to resume.</p>}
     </div>
   );
 };
